@@ -13,7 +13,9 @@ void print(T arr)
 
 int getPivot(int l, int r)
 {
-	return l + (r-l)/2; //TODO
+	srand(time(NULL));
+	int p = l + rand() % (r-l);
+	return p; 
 }
 
 int partition(std::vector<int>& v, int first, int last)
