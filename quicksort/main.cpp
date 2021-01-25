@@ -1,5 +1,7 @@
 #include <vector>
 #include <iostream>
+#include <fstream>
+#include <string>
 
 template <typename T>
 void print(T arr)
@@ -46,7 +48,19 @@ void quicksort(std::vector<int>& v, int first, int last)
 
 int main(int argc, char** argv)
 {
-	std::vector<int> vec = {4,3,5,6,0,9,1,2,7,8};
+	std::vector<int> vec;
+	std::fstream fs;
+	fs.open("../randomInput/input.txt", std::fstream::in);
+	if (fs.is_open())
+	{
+		std::string line;
+		while(getline(fs, line, ' '))
+		{
+			vec.push_back(std::stoi(line));
+		}
+	}
+	else return 1;
+	fs.close();
 	print(vec);
 	quicksort(vec, 0, vec.size() - 1);
 	print(vec);
