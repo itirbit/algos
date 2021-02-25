@@ -2,7 +2,7 @@
 #include <iostream>
 #include "../nodes/node.h"
 
-void bfs(Node* node)
+void dfs(Node* node)
 {
 	if(!node)
 		return;
@@ -23,6 +23,6 @@ void bfs(Node* node)
 int main()
 {
 	auto node = getNode();
-	bfs(node);
+	dfs(node);
 	cleanUp(node);
 }
