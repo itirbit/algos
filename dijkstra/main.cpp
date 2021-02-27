@@ -3,6 +3,7 @@
 #include <map>
 #include <algorithm>
 #include <iostream>
+#include <climits>
 
 struct Graph
 {
@@ -23,7 +24,7 @@ std::map<int,std::vector<int>> createNeighbours()
 		{1, {2,3,6} },
 		{2, {1,3,4} },
 		{3, {1,2,4,6} },
-		{4, {2,3} },
+		{4, {2,3,5} },
 		{5, {4,6} },
 		{6, {1,3,5}}
 	};	
@@ -37,7 +38,8 @@ std::map<int, std::map<int, int>> createDistances()
 		{2, {{1,7}, {3,10}, {4,15} }},
 		{3, {{1,9}, {2,10}, {4,11}, {6,2} } },
 		{4, {{2,15}, {3,11}, {5,6} }},
-		{5, {{4,6}, {6,9}}}
+		{5, {{4,6}, {6,9}}},
+		{6, {{1,14}, {3,2}, {5,9} }}
 	};	
 	return m;
 }
@@ -46,7 +48,7 @@ int main()
 {
 	std::vector<Graph*> g;
 	auto neigh = createNeighbours();
-	auto dist = createDistances();
+	auto distMap = createDistances();
 	for(auto [id, nvec] : neigh)
 	{
 		auto graph = new Graph;
@@ -74,16 +76,35 @@ int main()
 		}
 	}
 
-
-	std::queue<Graph*> q;
-	q.push(g.front());
+	std::map<int, int> calcDist;	
+	for(auto gr : g)
+	{
+		calcDist[gr->id] = INT_MAX;
+	}
+	calcDist[g.front()->id] = 0;
+	std::queue<std::pair<Graph*, int>> q;
+	q.push({g.front(), 0});
 	while(!q.empty())
 	{
-		auto graph = q.front();
+		auto [graph, length] = q.front();
 		q.pop();
 		if (graph->visited)
 			continue;
-		graph->visited = true;		
+		graph->visited = true;
+		for(auto ngraph : graph->neighbours)
+		{
+			int distance = distMap[graph->id][ngraph->id];
+			if(calcDist[ngraph->id] > length + distance)
+			{
+				calcDist[ngraph->id] = length + distance;
+				ngraph->visited = false;
+			}
+			q.push({ngraph, length + distance});
+		}
+	}
+	for (auto [id, distance] : calcDist)
+	{
+		std::cout << "smallest distance to vertice " << id << ": " << distance << '\n';
 	}
 	
 	cleanUp(g);
