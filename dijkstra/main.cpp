@@ -44,6 +44,20 @@ std::map<int, std::map<int, int>> createDistances()
 	return m;
 }
 
+void dfs(std::map<int, int>& calcDist, std::map<int, std::map<int, int>>& distMap, Graph* g, int length)
+{
+	if (g->visited)
+		return;
+	g->visited = true;
+	for(auto ng : g->neighbours)
+	{
+		int distance = distMap[g->id][ng->id];
+		calcDist[ng->id] = std::min(calcDist[ng->id], length + distance);
+		dfs(calcDist, distMap, ng, length + distance);
+	}
+	g->visited = false;
+}
+
 int main()
 {
 	std::vector<Graph*> g;
@@ -84,24 +98,7 @@ int main()
 	calcDist[g.front()->id] = 0;
 	std::queue<std::pair<Graph*, int>> q;
 	q.push({g.front(), 0});
-	while(!q.empty())
-	{
-		auto [graph, length] = q.front();
-		q.pop();
-		if (graph->visited)
-			continue;
-		graph->visited = true;
-		for(auto ngraph : graph->neighbours)
-		{
-			int distance = distMap[graph->id][ngraph->id];
-			if(calcDist[ngraph->id] > length + distance)
-			{
-				calcDist[ngraph->id] = length + distance;
-				ngraph->visited = false;
-			}
-			q.push({ngraph, length + distance});
-		}
-	}
+	dfs(calcDist, distMap, g.front(), 0);		
 	for (auto [id, distance] : calcDist)
 	{
 		std::cout << "smallest distance to vertice " << id << ": " << distance << '\n';
