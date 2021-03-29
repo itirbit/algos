@@ -15,25 +15,22 @@ string toString(vector<int>& nums)
 	for(int n : nums)
 	{
 		int diff[] = {-1,1};
-		bool hasNeighbours = false;
+		int minVal = n;
+		int maxVal = n;
 		for (int i = 0; i < 2; ++i)
 		{
 			int neighbour = n + diff[i];
 			if (peaks.find(neighbour) != peaks.end())
 			{
-				auto [minVal, maxVal] = peaks[neighbour];
-				minVal = min(n, minVal);
-				maxVal = max(n, maxVal);
-				peaks.erase(neighbour);
-				peaks[minVal] = make_pair(minVal, maxVal);
-				peaks[maxVal] = make_pair(minVal, maxVal);
-				hasNeighbours = true;
+				auto [newMin, newMax] = peaks[neighbour];
+				peaks.erase(newMin);
+				peaks.erase(newMax);
+				minVal = min(newMin, minVal);
+				maxVal = max(newMax, maxVal);
 			}		
-		}
-		if (!hasNeighbours)
-		{
-			peaks[n] = make_pair(n,n);
-		}
+		}		
+		peaks[minVal] = make_pair(minVal,maxVal);
+		peaks[maxVal] = make_pair(minVal,maxVal);
 	}
 	for (auto [_, entry] : peaks)
 	{
