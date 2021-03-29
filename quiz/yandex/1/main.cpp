@@ -56,11 +56,18 @@ void check(Args... args)
 		cout << i << " ";
 	cout << "\n";
 	cout << toString(v);
+	cout << "\n";
 }
 
 int main()
 {	
 	check(3,1,0,2,8,11,9,99,5,6,4);
+	check(0,1,2,3,4,5,8,9,11);
+	check(0);
+	check(0,2,4,6,10);
+	check(0,1,2,3,4);
+	check();
+	check(55,0,54,1,53,2,50,6,51,5,52,4,23,3);
 }
 
 
